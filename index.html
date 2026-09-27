@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -871,7 +872,8 @@
       </div>
 
       <div class="contact-grid">
-        <form id="inquiry-form" novalidate>
+        <form id="inquiry-form" action="https://formspree.io/f/xoevplel" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New Tour Inquiry — Cameron Dyer Tours">
           <div class="row-2">
             <div class="field">
               <label for="f-name">Name</label>
@@ -910,9 +912,10 @@
             <label for="f-message">Message</label>
             <textarea id="f-message" name="message" rows="4" placeholder="What are you hoping to see or do?"></textarea>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;">Send Inquiry</button>
-          <p class="form-note">This opens your email app with your details filled in — nothing sends until you hit send there.</p>
-          <p class="form-status" id="form-status" hidden>Opening your email app…</p>
+          <button type="submit" class="btn btn-primary" id="form-submit" style="width:100%;">Send Inquiry</button>
+          <p class="form-note" id="form-note">Sent straight to me — I'll reply within a day.</p>
+          <p class="form-status" id="form-status" hidden>Thanks — your message is on its way. I'll get back to you within a day.</p>
+          <p class="form-status" id="form-error" style="color:var(--bad);" hidden>Something went wrong sending that. Please email me directly at <a href="mailto:camerondyermedia@gmail.com" style="color:var(--bad);">camerondyermedia@gmail.com</a> instead.</p>
         </form>
 
         <div class="direct-card">
@@ -943,41 +946,43 @@
   (function(){
     var form = document.getElementById('inquiry-form');
     var status = document.getElementById('form-status');
+    var errorEl = document.getElementById('form-error');
+    var note = document.getElementById('form-note');
+    var submitBtn = document.getElementById('form-submit');
     if(!form) return;
+
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      var name = form.name.value.trim();
-      var email = form.email.value.trim();
-      var date = form.date.value.trim();
-      var size = form.size.value.trim();
-      var tour = form.tour.value;
-      var message = form.message.value.trim();
 
-      if(!name || !email){
+      if(!form.name.value.trim() || !form.email.value.trim()){
         form.name.reportValidity();
         form.email.reportValidity();
         return;
       }
 
-      var subject = 'Tour Inquiry — ' + name;
-      var bodyLines = [
-        'Name: ' + name,
-        'Email: ' + email,
-        'Preferred date(s): ' + (date || '—'),
-        'Group size: ' + (size || '—'),
-        'Tour of interest: ' + tour,
-        '',
-        'Message:',
-        message || '—'
-      ];
-      var mailto = 'mailto:camerondyermedia@gmail.com'
-        + '?subject=' + encodeURIComponent(subject)
-        + '&body=' + encodeURIComponent(bodyLines.join('\n'));
+      status.hidden = true;
+      errorEl.hidden = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      if(note) note.hidden = true;
 
-      if(status){
-        status.hidden = false;
-      }
-      window.location.href = mailto;
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(response){
+        if(response.ok){
+          status.hidden = false;
+          form.reset();
+        } else {
+          errorEl.hidden = false;
+        }
+      }).catch(function(){
+        errorEl.hidden = false;
+      }).finally(function(){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Inquiry';
+      });
     });
   })();
 </script>
