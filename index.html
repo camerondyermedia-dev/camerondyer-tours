@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cameron Dyer Tours</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
@@ -23,8 +22,23 @@
     --accent-2:#7a8a93;
     --good:#4c7a5c;
     --bad:#8a4a42;
+    --warm:#b9843c;
+    --warm-soft:#ecdcc0;
     --radius:2px;
     background:var(--ink);
+  }
+  .tint{background:var(--ink-2);}
+  .lift{
+    box-shadow:0 1px 2px rgba(20,25,35,0.05), 0 10px 28px -16px rgba(20,25,35,0.28);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .lift:hover{
+    transform:translateY(-3px);
+    box-shadow:0 2px 4px rgba(20,25,35,0.06), 0 16px 36px -16px rgba(20,25,35,0.34);
+  }
+  @media (prefers-reduced-motion:reduce){
+    .lift{transition:none;}
+    .lift:hover{transform:none;}
   }
   *{box-sizing:border-box;}
   body{
@@ -255,17 +269,41 @@
   .card{
     background:var(--surface);
     border:1px solid var(--line);
-    padding:26px;
+    padding:0 0 26px;
     display:flex;
     flex-direction:column;
     gap:16px;
     position:relative;
+    overflow:hidden;
   }
+  .card > *:not(.tour-photo){margin-inline:26px;}
+  .card .tour-photo{margin:0;}
   .card.featured{border-color:var(--accent);}
+  .tour-photo{
+    aspect-ratio:4/3;
+    width:100%;
+    background-size:cover,cover;
+    background-position:center,center;
+    background-color:var(--surface-2);
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+  }
+  .tour-photo span{
+    margin:12px;
+    font-family:"IBM Plex Mono",monospace;
+    font-size:0.64rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--text-faint);
+    background:var(--ink);
+    border:1px solid var(--line);
+    padding:4px 9px;
+  }
   .badge{
     position:absolute;
-    top:-1px;right:-1px;
-    background:var(--accent);
+    top:12px;right:-1px;
+    background:var(--warm);
     color:#ffffff;
     font-family:"IBM Plex Mono",monospace;
     font-size:0.66rem;
@@ -338,6 +376,13 @@
     display:flex;
     flex-direction:column;
     gap:10px;
+    background:var(--surface);
+    box-shadow:0 1px 2px rgba(20,25,35,0.05), 0 10px 28px -16px rgba(20,25,35,0.28);
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .addon:hover{
+    transform:translateY(-3px);
+    box-shadow:0 2px 4px rgba(20,25,35,0.06), 0 16px 36px -16px rgba(20,25,35,0.34);
   }
   .addon-icon{
     width:34px;height:34px;
@@ -412,6 +457,23 @@
   }
   .policy-tile p{margin:0;font-size:0.88rem;color:var(--text-dim);}
 
+  /* ---------- availability ---------- */
+  .calendar-wrap{
+    border:1px solid var(--line);
+    background:var(--surface);
+    padding:10px;
+    overflow:hidden;
+  }
+  .calendar-wrap iframe{
+    width:100%;
+    height:560px;
+    border:0;
+    display:block;
+  }
+  @media (max-width:560px){
+    .calendar-wrap iframe{height:460px;}
+  }
+
   /* ---------- contact ---------- */
   .contact-grid{
     display:grid;
@@ -458,6 +520,53 @@
   .direct-row a{text-decoration:none;color:var(--text);font-size:0.98rem;border-bottom:1px solid var(--line-strong);}
   .direct-row a:hover{color:var(--accent);border-color:var(--accent);}
 
+  /* ---------- reviews ---------- */
+  .review-layout{display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:start;}
+  .review-empty{
+    border:1px dashed var(--line-strong);
+    padding:28px;
+    color:var(--text-dim);
+    font-size:0.95rem;
+  }
+  .review-empty strong{display:block;color:var(--text);font-family:"Fraunces",serif;font-size:1.1rem;font-weight:500;margin-bottom:8px;}
+  .star-rating{
+    display:flex;
+    flex-direction:row-reverse;
+    justify-content:flex-end;
+    gap:4px;
+  }
+  .star-rating input{
+    position:absolute;
+    opacity:0;
+    width:0;height:0;
+  }
+  .star-rating label{
+    font-size:1.9rem;
+    line-height:1;
+    color:var(--line-strong);
+    cursor:pointer;
+    transition:color .12s ease;
+  }
+  .star-rating input:checked ~ label,
+  .star-rating label:hover,
+  .star-rating label:hover ~ label{
+    color:var(--warm);
+  }
+  .star-rating input:focus-visible + label{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+  .file-field{
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .file-field input[type="file"]{
+    font-family:"Work Sans",sans-serif;
+    font-size:0.85rem;
+    color:var(--text-dim);
+  }
+
   footer{
     border-top:1px solid var(--line);
     padding-block:32px;
@@ -474,6 +583,7 @@
   @media (max-width:760px){
     .details-grid{grid-template-columns:1fr;gap:40px;}
     .contact-grid{grid-template-columns:1fr;gap:40px;}
+    .review-layout{grid-template-columns:1fr;gap:32px;}
     .policy-grid{grid-template-columns:1fr;}
     .row-2{grid-template-columns:1fr;}
     header .wordmark .name span{display:none;}
@@ -483,6 +593,8 @@
 </style>
 </head>
 <body>
+
+
 <header>
   <div class="wrap bar">
     <a class="wordmark" href="#top">
@@ -569,7 +681,7 @@
     </div>
   </section>
 
-  <section id="about">
+  <section id="about" class="tint">
     <div class="wrap about-grid" style="grid-template-columns:0.9fr 1.1fr;">
       <p class="pull">"Slow down, pay attention, find the frame that actually means something."</p>
       <div class="about-body">
@@ -592,7 +704,8 @@
 
       <div class="tour-grid">
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-full-day.jpg'), linear-gradient(135deg, var(--accent) 0%, var(--warm) 100%);"></div>
           <span class="card-tag">Tokyo · In-City · Full Day</span>
           <h3>Tokyo Full Day</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>08:00</span>
@@ -615,14 +728,15 @@
           <p class="perfect-for"><b>Perfect for</b>If you want a full Tokyo day planned around you — not a fixed schedule.</p>
         </article>
 
-        <article class="card featured">
+        <article class="card featured lift">
+          <div class="tour-photo" style="background-image:url('images/tour-first-time.jpg'), linear-gradient(135deg, var(--warm) 0%, var(--accent) 100%);"><span>images/tour-first-time.jpg</span></div>
           <span class="badge">★ Most Popular</span>
           <span class="card-tag">First-Time Visitors</span>
           <h3>Tokyo First-Time Experience</h3>
-          <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>04:00–06:00</span>
+          <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>06:00</span>
           <p class="card-desc">If it's your first time in Tokyo, this is the perfect introduction. I'll take you through the city's most exciting areas while helping you understand how everything works — from transportation to food culture.</p>
           <div class="price-line">
-            <span class="price mono">¥35,000–¥40,000</span>
+            <span class="price mono">¥40,000</span>
             <span class="price-note">for up to 2 people</span>
           </div>
           <ul class="fine-print">
@@ -639,7 +753,8 @@
           <p class="perfect-for"><b>Perfect for</b>First-time visitors who want a smooth, fun introduction — so you feel confident exploring on your own after.</p>
         </article>
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-half-day.jpg'), linear-gradient(135deg, var(--accent-2) 0%, var(--accent) 100%);"><span>images/tour-half-day.jpg</span></div>
           <span class="card-tag">Half Day</span>
           <h3>Tokyo Half Day</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>04:00</span>
@@ -662,7 +777,8 @@
           <p class="perfect-for"><b>Perfect for</b>If you want something flexible and easy without committing to a full day.</p>
         </article>
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-local-life.jpg'), linear-gradient(135deg, var(--warm) 0%, var(--accent-2) 100%);"><span>images/tour-local-life.jpg</span></div>
           <span class="card-tag">Local Life</span>
           <h3>Hidden Tokyo: Local Life</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>04:00</span>
@@ -685,7 +801,8 @@
           <p class="perfect-for"><b>Perfect for</b>Couples and relaxed travelers who want to feel like a local, not a tourist.</p>
         </article>
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-neighborhood-walk.jpg'), linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);"><span>images/tour-neighborhood-walk.jpg</span></div>
           <span class="card-tag">Short &amp; Sweet</span>
           <h3>Neighborhood Walk</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>02:00–03:00</span>
@@ -708,7 +825,8 @@
           <p class="perfect-for"><b>Perfect for</b>If you want a local, unplanned feel and just enjoy the area without overthinking it.</p>
         </article>
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-kamakura.jpg'), linear-gradient(135deg, var(--accent-2) 0%, var(--warm) 100%);"><span>images/tour-kamakura.jpg</span></div>
           <span class="card-tag">Day Trip</span>
           <h3>Kamakura &amp; Enoshima</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>08:00</span>
@@ -731,7 +849,8 @@
           <p class="perfect-for"><b>Perfect for</b>History lovers, coastal scenery fans, and anyone who wants to escape the city for a day.</p>
         </article>
 
-        <article class="card">
+        <article class="card lift">
+          <div class="tour-photo" style="background-image:url('images/tour-hakone.jpg'), linear-gradient(135deg, var(--warm) 0%, var(--accent) 60%, var(--accent-2) 100%);"><span>images/tour-hakone.jpg</span></div>
           <span class="card-tag">Day Trip</span>
           <h3>Hakone Scenic Day</h3>
           <span class="timecode"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/></svg>08:00</span>
@@ -760,7 +879,7 @@
 
   <hr class="divider"/>
 
-  <section id="addons">
+  <section id="addons" class="tint">
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Add-Ons</p>
@@ -863,6 +982,87 @@
 
   <hr class="divider"/>
 
+  <section id="availability" class="tint">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Availability</p>
+        <h2>What's Already Booked</h2>
+        <p>Dates marked busy below are already reserved. Everything else is open, send a message below to lock one in.</p>
+      </div>
+      <div class="calendar-wrap">
+        <iframe src="https://calendar.google.com/calendar/embed?src=2ce7a888d5076340f06dcbd1d3545bc1006af6127242536301b116a3a74dfc69%40group.calendar.google.com&amp;ctz=Asia%2FTokyo" style="border:0" width="800" height="600" frameborder="0" scrolling="no" title="Tour availability calendar"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <section id="reviews">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Reviews</p>
+        <h2>What Guests Say</h2>
+        <p>Tours are just getting started, so this section is still empty. Been on one? I'd love your honest review below, photos welcome.</p>
+      </div>
+      <div class="review-layout">
+        <div class="review-empty">
+          <strong>No reviews yet</strong>
+          Be one of the first to share how your tour went. Real reviews only, nothing here is staged.
+        </div>
+
+        <form id="review-form" action="https://formspree.io/f/xoevplel" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New Tour Review — Cameron Dyer Tours">
+          <div class="row-2">
+            <div class="field">
+              <label for="r-name">Name</label>
+              <input id="r-name" name="name" type="text" required>
+            </div>
+            <div class="field">
+              <label for="r-email">Email</label>
+              <input id="r-email" name="email" type="email" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="r-tour">Which Tour</label>
+            <select id="r-tour" name="tour">
+              <option>Tokyo Full Day</option>
+              <option>Tokyo First-Time Experience</option>
+              <option>Tokyo Half Day</option>
+              <option>Hidden Tokyo: Local Life</option>
+              <option>Neighborhood Walk</option>
+              <option>Kamakura &amp; Enoshima Day Trip</option>
+              <option>Hakone Scenic Day Trip</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="r-rating-5">Rating</label>
+            <div class="star-rating" id="r-rating-group">
+              <input type="radio" id="r-rating-5" name="rating" value="5" required><label for="r-rating-5" title="5 stars">★</label>
+              <input type="radio" id="r-rating-4" name="rating" value="4"><label for="r-rating-4" title="4 stars">★</label>
+              <input type="radio" id="r-rating-3" name="rating" value="3"><label for="r-rating-3" title="3 stars">★</label>
+              <input type="radio" id="r-rating-2" name="rating" value="2"><label for="r-rating-2" title="2 stars">★</label>
+              <input type="radio" id="r-rating-1" name="rating" value="1"><label for="r-rating-1" title="1 star">★</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="r-message">Your Review</label>
+            <textarea id="r-message" name="message" rows="4" required></textarea>
+          </div>
+          <div class="field file-field">
+            <label for="r-photo">Add a Photo (optional)</label>
+            <input id="r-photo" name="photo" type="file" accept="image/*">
+          </div>
+          <button type="submit" class="btn btn-primary" id="review-submit" style="width:100%;">Submit Review</button>
+          <p class="form-note" id="review-note">Sent straight to me, I read every one.</p>
+          <p class="form-status" id="review-status" hidden>Thank you! Your review is on its way.</p>
+          <p class="form-status" id="review-error" style="color:var(--bad);" hidden>Something went wrong sending that. Please email me directly at <a href="mailto:camerondyermedia@gmail.com" style="color:var(--bad);">camerondyermedia@gmail.com</a> instead.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
   <section id="contact">
     <div class="wrap">
       <div class="section-head">
@@ -898,7 +1098,7 @@
             <label for="f-tour">Tour You're Interested In</label>
             <select id="f-tour" name="tour">
               <option>Tokyo Full Day (8 Hours)</option>
-              <option>Tokyo First-Time Experience (4–6 Hours)</option>
+              <option>Tokyo First-Time Experience (6 Hours)</option>
               <option>Tokyo Half Day (4 Hours)</option>
               <option>Hidden Tokyo: Local Life (4 Hours)</option>
               <option>Neighborhood Walk (2–3 Hours)</option>
@@ -985,6 +1185,52 @@
       });
     });
   })();
+
+  (function(){
+    var form = document.getElementById('review-form');
+    var status = document.getElementById('review-status');
+    var errorEl = document.getElementById('review-error');
+    var note = document.getElementById('review-note');
+    var submitBtn = document.getElementById('review-submit');
+    if(!form) return;
+
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+
+      var ratingChecked = form.querySelector('input[name="rating"]:checked');
+      if(!form.name.value.trim() || !form.email.value.trim() || !form.message.value.trim() || !ratingChecked){
+        form.name.reportValidity();
+        form.email.reportValidity();
+        form.message.reportValidity();
+        return;
+      }
+
+      status.hidden = true;
+      errorEl.hidden = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      if(note) note.hidden = true;
+
+      fetch(form.action, {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      }).then(function(response){
+        if(response.ok){
+          status.hidden = false;
+          form.reset();
+        } else {
+          errorEl.hidden = false;
+        }
+      }).catch(function(){
+        errorEl.hidden = false;
+      }).finally(function(){
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Review';
+      });
+    });
+  })();
 </script>
+
 </body>
 </html>
